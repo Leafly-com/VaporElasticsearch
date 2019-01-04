@@ -27,16 +27,6 @@ public struct BoundingBox: QueryElement {
     public let topLeft: [Double]
     public let bottomRight: [Double]
 
-    public var box: Box? {
-        guard let tlon = topLeft.first, let tlat = topLeft.last else { return nil }
-        guard let blon = bottomRight.first, let blat = bottomRight.last else { return nil }
-
-        let tLeft = CGPoint(x: tlat, y: tlon)
-        let bRight = CGPoint(x: blat, y: blon)
-
-        return Box(topLeft: tLeft, bottomRight: bRight)
-    }
-
     public init(field: String, topLeft: [Double], bottomRight: [Double]) {
         self.field = field
         self.topLeft = topLeft

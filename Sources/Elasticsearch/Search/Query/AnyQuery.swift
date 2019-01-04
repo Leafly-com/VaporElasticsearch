@@ -39,6 +39,8 @@ public enum QueryElementMap : String, Codable {
             return Fuzzy.self
         case .ids:
             return IDs.self
+        case .location:
+            return BoundingBox.self
         case .match:
             return Match.self
         case .matchAll:

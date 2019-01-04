@@ -16,7 +16,7 @@ import Foundation
 
 public struct BoundingBox: QueryElement {
     /// :nodoc:
-    public static var typeKey = QueryElementMap.term
+    public static var typeKey = QueryElementMap.location
 
     public let field: String
     public let lat: Double

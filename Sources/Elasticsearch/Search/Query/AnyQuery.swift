@@ -2,10 +2,10 @@
 public enum QueryElementMap : String, Codable {
     
     case boolQuery = "bool"
-    case boundingBox = "pin.location"
     case exists
     case fuzzy
     case ids
+    case location = "pin.location"
     case match
     case matchAll = "match_all"
     case matchNone = "match_none"

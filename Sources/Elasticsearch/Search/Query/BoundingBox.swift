@@ -14,29 +14,44 @@ import Foundation
  [More information](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html)
  */
 
+public struct Box {
+    var topLeft: CGPoint
+    var bottomRight: CGPoint
+}
+
 public struct BoundingBox: QueryElement {
     /// :nodoc:
     public static var typeKey = QueryElementMap.location
 
     public let field: String
-    public let lat: Double
-    public let lon: Double
+    public let topLeft: [Double]
+    public let bottomRight: [Double]
 
-    public init(field: String, lat: Double, lon: Double) {
+    public let box: Box? {
+        guard let tlon = topLeft.first, let tlat = topLeft.last else { return nil }
+        guard let blon = bottomRight.first, let blat = bottomRight.last else { return nil }
+
+        let tLeft = CGPoint(x: tlat, y: tlon)
+        let bRight = CGPoint(x: blat, y: blon)
+
+        return Box(topLeft: tLeft, bottomRight: bRight)
+    }
+
+    public init(field: String, topLeft: [Double], bottomRight: [Double]) {
         self.field = field
-        self.lat = lat
-        self.lon = lon
+        self.topLeft = topLeft
+        self.bottomRight = bottomRight
     }
 
     private struct Inner: Codable {
-        let lat: Double
-        let lon: Double
+        let topLeft: [Double]
+        let bottomRight: [Double]
     }
 
     /// :nodoc:
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: DynamicKey.self)
-        let inner = BoundingBox.Inner(lat: lat, lon: lon)
+        let inner = BoundingBox.Inner(topLeft: topLeft, bottomRight: bottomRight)
         try container.encode(inner, forKey: DynamicKey(stringValue: field)!)
     }
 
@@ -48,7 +63,7 @@ public struct BoundingBox: QueryElement {
 
         let innerDecoder = try container.superDecoder(forKey: key!)
         let inner = try BoundingBox.Inner(from: innerDecoder)
-        self.lat = inner.lat
-        self.lon = inner.lon
+        self.topLeft = inner.topLeft
+        self.bottomRight = inner.bottomRight
     }
 }

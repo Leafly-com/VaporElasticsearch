@@ -27,7 +27,7 @@ public struct BoundingBox: QueryElement {
     public let topLeft: [Double]
     public let bottomRight: [Double]
 
-    public let box: Box? {
+    public var box: Box? {
         guard let tlon = topLeft.first, let tlat = topLeft.last else { return nil }
         guard let blon = bottomRight.first, let blat = bottomRight.last else { return nil }
 

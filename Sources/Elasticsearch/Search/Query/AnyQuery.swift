@@ -5,6 +5,7 @@ public enum QueryElementMap : String, Codable {
     case exists
     case fuzzy
     case ids
+    case location = "pin.location"
     case match
     case matchAll = "match_all"
     case matchNone = "match_none"
@@ -38,6 +39,8 @@ public enum QueryElementMap : String, Codable {
             return Fuzzy.self
         case .ids:
             return IDs.self
+        case .location:
+            return BoundingBox.self
         case .match:
             return Match.self
         case .matchAll:

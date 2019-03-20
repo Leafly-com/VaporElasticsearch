@@ -102,6 +102,33 @@ final class ElasticsearchAggregationCodableTests: XCTestCase {
         
         XCTAssertEqual(json, encoded)
     }
+  
+    func testNestingAggregations_encodesCorrectly() throws {
+        let json = """
+            {"aggs":{"terms_1":{"terms":{"field":"field1","size":10},"aggs":{"terms_2":{"terms":{"field":"terms2","size":4},"aggs":{"top_hits_aggs":{"top_hits":{"size":1}}}}}}},"size":0,"from":0}
+            """
+      let searchContainer = SearchContainer(aggs:
+        [
+          TermsAggregation(
+            name: "terms_1",
+            field: "field1",
+            size: 10,
+            aggs: [
+              TermsAggregation(
+                name: "terms_2",
+                field: "terms2",
+                size: 4,
+                aggs: [
+                  TopHitsAggregation(name: "top_hits_aggs",                                  
+                                     size: 1)
+                ])
+            ])
+        ]
+      )
+        let encoded = try encoder.encodeToString(searchContainer)
+      
+        XCTAssertEqual(json, encoded)
+    }
     
     func testLinuxTestSuiteIncludesAllTests() {
         #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
